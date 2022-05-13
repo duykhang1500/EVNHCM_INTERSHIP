@@ -1,0 +1,11 @@
+{
+    "APIGATEWAY": "http://10.137.126.99:7003/",
+    "APIKEY": "rww+3Ub1WNreSykalAiVTFxuqVEKjvfHSSgsUOQVOEo=",
+    "UIConfig": {
+        "IP_UI": "http://localhost:4200",
+        "PROJECT_NAME": "CMIS 4.0"
+    },
+    "Version": "31.10.2021",
+    "SiteKey": "6LcHRYUUAAAAAGXkfCKCLYjo-mpwjhWHJJMXRY77",
+    "CSBT": "http://10.1.117.177:4700"
+}

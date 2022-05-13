@@ -1,0 +1,349 @@
+<div class="scroll-full-height">
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <h4>Thông tin tìm kiếm khách hàng</h4>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label>Cách tìm kiếm </label>
+                        <p-dropdown styleClass="w-full" name="LoaiTimKiem" [disabled]="_disableBtnTimKiem"
+                            filter="filter" (onChange)="changeCachTimKiem($event)" [options]="_lstLoaiTimKiem"
+                            [(ngModel)]="_loaiTimKiem" placeholder="{{_loaiTimKiem.label}}"></p-dropdown>
+                    </div>
+
+                    <div class="field col-12 md:col-6">
+                        <label> Giá trị tìm kiếm </label>
+                        <div *ngIf="timTheoNgayKy == false ">
+                            <input class="w-full" name="giaTri" type="text" [disabled]="_disableBtnTimKiem" size="30"
+                                pInputText [(ngModel)]="_giaTriTimKiem" (keypress)="txtGiatriTkiem_keyPress($event)">
+                        </div>
+                        <div *ngIf="timTheoNgayKy == true">
+                            <p-calendar styleClass="w-full" [(ngModel)]="_giaTriTimKiem" showIcon="true"
+                                dateFormat="dd/mm/yy">
+                            </p-calendar>
+                        </div>
+                    </div>
+
+                    <div class="field col-12">
+                        <p-checkbox [(ngModel)]="checked" binary="true" label="Hiển thị thông tin hết hiệu lực">
+                        </p-checkbox>
+                    </div>
+
+                    <div class="field col-12">
+                        <p-panel header="Tìm kiếm nâng cao" [toggleable]="true" collapsed="true">
+                            <div class="fluid formgrid grid">
+                                <div class="field col-12">&nbsp;</div>
+                                <div class="field col-12 md:col-4">
+                                    <label>Nhóm khách hàng:</label>
+                                    <p-dropdown styleClass="w-full" [options]="_lstNhomKH"
+                                        (onChange)="onChangeNhomKH($event)" [(ngModel)]="_lstNhomKHSelected">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="field col-12 md:col-4">
+                                    <label>Loại khách hàng:</label>
+                                    <p-dropdown styleClass="w-full" [options]="_lstKH" [(ngModel)]="_lstKHSelected">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="field col-12 md:col-4">
+                                    <label>Hình thức thanh toán:</label>
+                                    <p-dropdown styleClass="w-full" [options]="_lstHttt"
+                                        (onChange)="onChangeHTTT($event)" [(ngModel)]="_lstHtttSelected"></p-dropdown>
+                                </div>
+
+                                <div class="field col-12 md:col-4">
+                                    <label>Phương thức thanh toán:</label>
+                                    <p-dropdown styleClass="w-full" [options]="_lstPttt"
+                                        (onChange)="onChangePTTT($event)" [(ngModel)]="_lstPtttSelected"></p-dropdown>
+                                </div>
+
+                                <div class="field col-12 md:col-4">
+                                    <label>Loại hợp đồng:</label>
+                                    <p-dropdown styleClass="w-full" [options]="_lstLoaiHopDong"
+                                        (onChange)="onChangeLoaiHopDong($event)" [(ngModel)]="_lstLoaiHopDongSelected">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                        </p-panel>
+                    </div>
+
+                    <div class="field col-12 md:col-2">&nbsp; </div>
+                    <div class="field col-12 md:col-2">
+                        <p-button label="Tìm kiếm" icon="pi pi-search" [disabled]="_disableBtnTimKiem"
+                            styleClass="p-button w-full" (click)="timKiemKhachHangClick()"></p-button>
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <p-button label="Chọn" icon="pi pi-check" [disabled]="_disableBtnTimKiem"
+                            styleClass="p-button w-full" (click)="chonKhachHangClick()"></p-button>
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <p-button label="In hợp đồng" icon="pi pi-print" styleClass="p-button w-full"></p-button>
+                        <!-- <button-inhdong [paramInHDong]="_hdongData" [paramPhanHe]="_phanHe"></button-inhdong> -->
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <p-button label="Export" icon="pi pi-file-excel" styleClass="p-button w-full"></p-button>
+                        <!-- <button-excel [paramExport]="_exportData"></button-excel> -->
+                    </div>
+                    <div class="field col-12 md:col-2">&nbsp; </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+                    <!-- <button-print-data-list [List_print]="_khachHangSelected" [List_display]="_lstDSTimKiem"
+                            [isPrint]="false"></button-print-data-list> -->
+                    <!-- <button pButton type="button" label="In danh sách tìm kiếm"></button> -->
+                    <div class="col-12">
+                        <p-table #dt styleClass="p-datatable-gridlines" [value]="_lstDSTimKiem" dataKey="MA_KHANG"
+                            [(selection)]="_khachHangSelected" (onRowSelect)="onRowSelect($event)"
+                            (onRowUnselect)="onUnSelectRowKHang($event)" [showCurrentPageReport]="true"
+                            (onHeaderCheckboxToggle)="checkListDuAn($event)" [paginator]="true" [rows]="5"
+                            scrollDirection="both" [rowsPerPageOptions]="[5,10,20,50]" rowHover="true"
+                            currentPageReportTemplate="Khách hàng số {first} đến {last} trong tổng {totalRecords} khách hàng"
+                            [globalFilterFields]="['TEN_KHANG','MA_KHANG']" scrollable="true" selectionMode="single">
+                            <ng-template pTemplate="caption">
+                                <div class="table-header">
+                                    <div class="p-fluid p-formgrid grid">
+                                        <div class="col-12 md:col-6">
+                                            <h4> Danh sách khách hàng tìm kiếm </h4>
+                                        </div>
+                                        <div class="col-12 md:col-3 p-offset-3">
+                                            <span class="p-input-icon-left">
+                                                <i class="pi pi-search"></i>
+                                                <input pInputText type="text"
+                                                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                                    placeholder="Tìm kiếm khách hàng" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" style="padding-left: 0px !important;">
+                                <tr>
+                                    <th style="width:50px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">&nbsp;</div>
+                                    </th>
+                                    <th style="width:150px" pSortableColumn="MA_KHANG">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Mã khách hàng
+                                            <p-sortIcon field="MA_KHANG"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                    <th style="width:200px" pSortableColumn="TEN_KHANG">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Tên khách hàng
+                                            <p-sortIcon field="TEN_KHANG"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                    <th style="width:150px" pSortableColumn="MA_HDONG">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Mã hợp đồng
+                                            <p-sortIcon field="MA_HDONG"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                    <th style="width:150px" pSortableColumn="MASO_THUE">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Mã số thuế
+                                            <p-sortIcon field="MASO_THUE"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Hiệu lực từ</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Hiệu lực đến</div>
+                                    </th>
+                                    <th style="width:150px" pSortableColumn="MA_DDO">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Mã điểm đo
+                                            <p-sortIcon field="MA_DDO"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Địa điểm dùng điện</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Số hộ</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã ngành nghề</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Chuỗi giá</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã số GCS</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Khu vực-STT</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Số cột</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Số hộp</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Số pha</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã KHTT</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Loại K.hàng</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Địa chỉ K.hàng</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Nhóm K.hàng</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Email</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Điện thoại</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Loại H.đồng</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Điện tử</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Loại điểm đo</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Ký mua CSPK</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã trạm</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Tên trạm</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã lộ</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Mã tổ</div>
+                                    </th>
+                                    <th style="width:70px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Cấp điện áp</div>
+                                    </th>
+                                    <th style="width:150px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Tên cấp điện áp</div>
+                                    </th>
+                                    <th style="width:100px">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Ngày ký</div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-row>
+                                <tr class="p-selectable-row" [pSelectableRow]="row" [pContextMenuRow]="row">
+                                    <td style="width:50px">
+                                        <button type="button" pButton (click)="btnThucHienTiep(row)"
+                                            icon="pi pi-pencil"></button>
+                                    </td>
+                                    <td style="width:150px">{{row.MA_KHANG}}</td>
+                                    <td style="width:200px">{{row.TEN_KHANG}}</td>
+                                    <td style="width:150px">{{row.MA_HDONG}}</td>
+                                    <td style="width:150px">{{row.MASO_THUE}}</td>
+                                    <td style="width:100px">{{row.HLUC_TUNGAY}}</td>
+                                    <td style="width:100px">{{row.HLUC_DENNGAY}}</td>
+                                    <td style="width:150px">{{row.MA_DDO}}</td>
+                                    <td style="width:150px">{{row.DIA_CHI_DDO}}</td>
+                                    <td style="width:70px">{{row.SO_HO}}</td>
+                                    <td style="width:100px">{{row.MA_NN}}</td>
+                                    <td style="width:150px">{{row.CHUOI_GIA}}</td>
+                                    <td style="width:100px">{{row.MA_SOGCS}}</td>
+                                    <td style="width:100px">{{row.KVUC_STT}}</td>
+                                    <td style="width:70px">{{row.SO_COT}}</td>
+                                    <td style="width:70px">{{row.SO_HOP}}</td>
+                                    <td style="width:70px">{{row.SO_PHA}}</td>
+                                    <td style="width:150px">{{row.MA_KHTT}}</td>
+                                    <td style="width:100px">{{row.LOAI_KHANG}}</td>
+                                    <td style="width:150px">{{row.DIA_CHI_KH}}</td>
+                                    <td style="width:150px">{{row.TENNHOM_KHANG}}</td>
+                                    <td style="width:150px">{{row.EMAIL}}</td>
+                                    <td style="width:150px">{{row.DTHOAI_DVU}}</td>
+                                    <td style="width:150px">{{row.TEN_LOAIHD}}</td>
+                                    <td style="width:70px">{{row.DIEN_TU}}</td>
+                                    <td style="width:150px">{{row.TENLOAI_DDO}}</td>
+                                    <td style="width:100px">{{row.KIMUA_CSPK}}</td>
+                                    <td style="width:100px">{{row.MA_TRAM}}</td>
+                                    <td style="width:100px">{{row.TEN_TRAM}}</td>
+                                    <td style="width:100px">{{row.MA_LO}}</td>
+                                    <td style="width:70px">{{row.MA_TO}}</td>
+                                    <td style="width:70px">{{row.MA_CAPDA}}</td>
+                                    <td style="width:150px">{{row.TEN_CAPDA}}</td>
+                                    <td style="width:100px">{{row.NGAY_KY}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--contextMenu trong p-dataTable-->
+<p-contextMenu #cm [model]="_itemsCxtMenu"></p-contextMenu>
+<!--[modal]="true" không cho chọn khi đang show dialog-->
+<p-dialog header="Thông tin chi tiết" [(visible)]="_displayDialog" showEffect="fade" height="100%" position="center">
+    <p-panel header="{{_khachHangSelected.MaKH}}" *ngIf="_khachHangSelected">
+        <div class="grid grid-responsive p-fluid" style="font-size:16px;text-align:left">
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã KH: {{_khachHangSelected.MA_KHANG}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Tên KH: {{_khachHangSelected.TEN_KHANG}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Số hộ: {{_khachHangSelected.SO_HO}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã hợp đồng: {{_khachHangSelected.MA_HDONG}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã điểm đo: {{_khachHangSelected.MA_DDO}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Đ.điểm d.điện: {{_khachHangSelected.DIA_CHI_DDO}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã sổ GCS: {{_khachHangSelected.MA_SOGCS}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Khu vực-STT: {{_khachHangSelected.KVUC_STT}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Số công tơ: {{_khachHangSelected.SO_CTO}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Số pha: {{_khachHangSelected.SO_PHA}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã KH th.toán: {{_khachHangSelected.MA_KHTT}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Loại KH: {{_khachHangSelected.LOAI_KHANG}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Địa chỉ KH: {{_khachHangSelected.DIA_CHI_KH}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Nhóm KH: {{_khachHangSelected.MANHOM_KHANG}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Website: {{_khachHangSelected.WEBSITE}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Email: {{_khachHangSelected.EMAIL}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>SĐT SMS: {{_khachHangSelected.DTHOAI}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Loại hợp đồng: {{_khachHangSelected.MA_LOAIHD}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Loại điểm đo: {{_khachHangSelected.LOAI_DDO}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mục đích: {{_khachHangSelected.MUC_DICH}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Kí mua CSPK: {{_khachHangSelected.KIMUA_CSPK}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã công tơ: {{_khachHangSelected.MA_CTO}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã trạm: {{_khachHangSelected.MA_TRAM}}</div>
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã lộ: {{_khachHangSelected.MA_LO}}</div>
+            </div>
+            <div class="p-g">
+                <div class="col-12 md:col-4 p-lg-4" lbInput>Mã tổ: {{_khachHangSelected.MA_TO}}</div>
+            </div>
+        </div>
+    </p-panel>
+    <p-footer>
+        <div class="p-dialog-buttonpane p-widget-content p-helper-clearfix">
+            <button pButton type="button" icon="fa-close" (click)="closeDiaglogClick()" label="Thoát"></button>
+        </div>
+    </p-footer>
+</p-dialog>

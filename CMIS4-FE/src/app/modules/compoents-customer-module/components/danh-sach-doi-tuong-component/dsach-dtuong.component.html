@@ -1,0 +1,77 @@
+<ng-container *ngIf="!isLazy">
+  <div *ngIf="strUIType==1">
+    <div *ngIf="isLoadLocal == true">
+      <p-dropdown [options]="lstCombo" [filter]="filter" [disabled]="disabled" #drd [(ngModel)]="selectedDMuc"
+        [autoWidth]="false" (onChange)="showSelect(event)"></p-dropdown>
+    </div>
+  </div>
+  <div *ngIf="strUIType==2">
+    <div *ngIf="isLoadLocal == true">
+      <p-autoComplete [(ngModel)]="selectedDMuc" #auto [disabled]="disabled" [suggestions]="lstCombo" field="label"
+        (completeMethod)="search($event)" scrollable="true" scrollHeight="700%" (onSelect)="showSelect(event)"
+        (onUnSelect)="showSelect(event)" [minLength]="0">
+      </p-autoComplete>
+    </div>
+  </div>
+  <div *ngIf="strUIType==3">
+    <div *ngIf="isLoadLocal == true">
+      <p-multiSelect [options]="lstCombo" #mlt [disabled]="disabled" [defaultLabel]="defaultLabel"
+        [displaySelectedLabel]="true" [selectedItemsLabel]="selectedItemsLabel" [maxSelectedLabels]="maxSelectedLabels"
+        [(ngModel)]="selectedDMuc" (onChange)="showSelect(event)"></p-multiSelect>
+    </div>
+  </div>
+
+  <div *ngIf="isLoadLocal == false">
+    <div class="ui-inputgroup">
+      <input [disabled]="disabled" type="text" pInputText #dte [(ngModel)]="selectedDMucSelected" placeholder=""
+        (keydown)="enterStrDanhMuc($event)" (onChange)="showSelect(event)">
+      <button [disabled]="disabled" id="{{BtnLoadDM}}" pButton type="button" (click)="btnDanhMuc_click($event,op)"
+        class="ui-button-info" label="+"></button>
+    </div>
+  </div>
+
+  <p-overlayPanel #op [showCloseIcon]="true" [dismissable]="true">
+    <div class="ui-inputgroup">
+      <button pButton type="button" icon="fa-search" class="ui-button-info"></button>
+      <input #gb type="text" [(ngModel)]="_Txttimkiem" pInputText size="50" placeholder="Tìm kiếm tất cả các trường" />
+    </div>
+    <div class="scroll-w600">
+      <div class="ui-g">
+        <div class="ui-g-4">
+        </div>
+        <div class="ui-g-4 ui-g-nopad"></div>
+        <div class="ui-g-4" style="text-align: right" pInput>
+          <label>
+            Tổng số: {{_lstDMucSelected.length}}/{{_lstDMuc.length}}
+          </label>
+        </div>
+      </div>
+      <p-dataTable *ngIf="strUIType!=3" [headerCheckboxToggleAllPages]="true" [immutable]="false" [value]="_lstDMuc"
+        [(selection)]="_lstDMucSelected" selectionMode="single" [globalFilter]="gb" [editable]="true" [rows]="5"
+        [paginator]="true" scrollable="true" scrollWidth="100%">
+        <p-column *ngFor="let col of _colsDMuc" [field]="col.field" [header]="col.header" [style]="col.style"
+          [sortable]="col.sortable" [filter]="col.filter" [editable]="col.editable"></p-column>
+      </p-dataTable>
+      <p-dataTable *ngIf="strUIType==3" [headerCheckboxToggleAllPages]="true" [immutable]="false" [value]="_lstDMuc"
+        [(selection)]="_lstDMucSelected" [globalFilter]="gb" [editable]="true" [rows]="5" [paginator]="true"
+        scrollable="true" scrollWidth="100%">
+        <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+        <p-column *ngFor="let col of _colsDMuc" [field]="col.field" [header]="col.header" [style]="col.style"
+          [sortable]="col.sortable" [filter]="col.filter" [editable]="col.editable"></p-column>
+      </p-dataTable>
+    </div>
+    <div class="ui-g">
+      <div class="ui-g-9 ui-g-nopad"></div>
+      <div class="ui-g-3" style="text-align: right" pInput>
+        <button pButton type="button" (click)="btnChon_click(op)" icon="fa-check" class="ui-button-success"
+          label="Chọn"></button>
+      </div>
+    </div>
+  </p-overlayPanel>
+</ng-container>
+<ng-container *ngIf="isLazy">
+  <app-dtuong-large-data [disabled]="disabled" [strSelectMode]="strUIType===3 ? 'multiple' : 'single'"
+    [totalRecords]="totalRecords" [strValueName]="strValueName" [strLabelName]="strLabelName" [strTenDmuc]="strTenDMuc"
+    [bindingValue]="bindingValue" (emitSelectedValue)="onChangeTram($event)">
+  </app-dtuong-large-data>
+</ng-container>

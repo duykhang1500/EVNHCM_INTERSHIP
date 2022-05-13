@@ -1,0 +1,617 @@
+<p-confirmDialog key='cfIn'></p-confirmDialog>
+<div class="container">
+  <form [formGroup]="tienTNhanForm">
+    <div class="form-group">
+      <div
+        style="position: fixed;margin-bottom:10px;overflow: hidden;z-index: 222;width:100%;margin-left: -4px; background-color: #F7F7F7 !important">
+        <div>
+          <p-toolbar class="myToolbar">
+            <div class="p-toolbar-group-left">
+              <button class="tool" pButton type="button" icon="p-icon-plus" label="Thêm" (click)="btnThemClick()"
+                style="font-size: 120%;" [disabled]="isDisabledBtnThem"></button>
+              <button class="tool" pButton type="button" icon="p-icon-pencil" label="Sửa" (click)="btnSuaClick()"
+                style="font-size: 120%;" [disabled]="isDisabledBtnSua"></button>
+              <button class="tool" pButton type="button" icon="p-icon-delete" label="Xóa" (click)="btnXoaDuLieuClick()"
+                style="font-size: 120%;" [disabled]="isDisabledBtnXoa"></button>
+              <button class="tool" pButton type="button" icon="p-icon-save" label="Ghi" (click)="btnCapNhatClick()"
+                style="font-size: 120%;" [disabled]="isDisabledBtnGhi"></button>
+              <button class="tool" pButton type="button" icon="p-icon-closethick" label="Hủy" (click)="btnHuyClick()"
+                style="font-size: 120%;" [disabled]="isDisabledBtnHuy"></button>
+              <button class="tool" pButton type="button" icon="p-icon-refresh" label="Tiếp tục"
+                (click)="btnTiepTucClick()" style="font-size: 120%;" [disabled]="isDisabledBtnTiep"></button>
+            </div>
+            <div class="p-toolbar-group-right" style="padding-right:20%">
+              <!-- <button class="tool" pButton type="button" icon="p-icon-receipt" label="Khởi tạo qua File"
+                (click)="btnUpFileClick()" style="font-size: 120%;" [disabled]="isDisabledBtnIn"></button> -->
+              <button class="tool" pButton type="button" icon="p-icon-file-download" label="Tải file Excel mẫu"
+                (click)="btnDownFileMauClick()" style="font-size: 120%;" [disabled]="isDisabledBtnIn"></button>
+            </div>
+          </p-toolbar>
+        </div>
+      </div>
+      <br>
+      <br>
+      <p-fieldset legend="Thông tin tiếp nhận dự án điện nông thôn" [toggleable]="true">
+        <div class="p-g">
+          <div class="p-g-12 p-md-12 p-lg-12">
+            <div class="card">
+              <div class="p-g p-fluid">
+                <div class="p-g-12 p-md-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="MA_DUAN">Mã dự án</label>
+                  </div>
+                  <div class="p-g-8">
+                    <input id="MA_DUAN" maxlength="16" [readonly]="readonlyMaDAn" type="text" pInputText
+                      class="form-control" formControlName="MA_DUAN" placeholder="Định danh yêu cầu" #MA_DUAN
+                      (keydown.enter)="searchDuAn($event.target.value)">
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="MA_LOAI_DUAN">Mã loại dự án</label>
+                  </div>
+                  <div class="p-g-8">
+                    <p-dropdown id="MA_LOAI_DUAN" [styleClass]="'form-control'" class="form-control"
+                      styleClass="form-control" formControlName="MA_LOAI_DUAN" [style]="{'width':'100%'}"
+                      [options]="lstMaLoaiDAn" [filter]="true"></p-dropdown>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="MA_DVIDCHINH">Địa chính</label>
+                  </div>
+                  <div class="p-g-8">
+                    <!-- <input id="MA_DVIDCHINH"  type="text" pInputText class="form-control" formControlName="MA_DVIDCHINH"> -->
+                    <p-autoComplete id="MA_DVIDCHINH_LABLE" [styleClass]="'form-control'" class="form-control"
+                      styleClass="form-control" formControlName="MA_DVIDCHINH_LABLE" [style]="{'width':'100%'}"
+                      #MA_DVIDCHINH_LABLE [suggestions]="lstDViDChinhFilter" (completeMethod)="searchDiaChinh($event)"
+                      [minLength]="1" placeholder="Đơn vị địa chính" (onSelect)="onSelectDiaChinh($event)"
+                      field="TEN_DVIDCHINH" [multiple]="false" [dropdown]="true">
+                    </p-autoComplete>
+                  </div>
+                </div>
+
+                <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="TEN_CTRINH">Tên công trình</label>
+                  </div>
+                  <div class="p-g-8">
+                    <textarea style="max-width: 100%" id="TEN_CTRINH" type="text" maxlength="300" pInputText
+                      class="form-control" #TEN_CTRINH placehoder="Tên công trình" formControlName="TEN_CTRINH" rows="1"
+                      cols="1" pInputTextarea></textarea>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="SO_HO">Số hộ</label>
+                  </div>
+                  <div class="p-g-8">
+                    <input id="SO_HO" type="number" maxlength="12" pInputText class="form-control"
+                      formControlName="SO_HO">
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+                  <div class="p-g-4">
+                    <label for="NAM_VH">Năm vận hành</label>
+                  </div>
+                  <div class="p-g-8">
+                    <input id="NAM_VH" type="number" pInputText class="form-control" formControlName="NAM_VH">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NAM_VH'].value>2021">
+                      Không chọn năm lớn hơn năm hiện tại
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-g-12 p-md-4 p-lg-4">
+            <div class="p-g p-fluid">
+              <div>
+                <div class="p-g-12 p-md-12 p-lg-12 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="DZ_110">Đường dây 110 (m)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="DZ_110" type="text" maxlength="12" pInputText class="form-control"
+                      formControlName="DZ_110" placeholder="Đường dây 110(m)">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['DZ_110'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-12 p-lg-12 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="DZ_HTHE">Đường dây hạ áp (m)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="DZ_HTHE" type="text" maxlength="12" pInputText class="form-control"
+                      formControlName="DZ_HTHE" placeholder="Đường dây hạ áp">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['DZ_HTHE'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-12 p-lg-12 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="DZ_TTHE">Đường dây trung thế (m)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="DZ_TTHE" type="text" maxlength="12" pInputText class="form-control"
+                      formControlName="DZ_TTHE" placeholder="Đường dây trung thế">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['DZ_TTHE'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-12 p-lg-12 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="SL_TRAM">Số lượng trạm (trạm)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="SL_TRAM" type="text" maxlength="12" pInputText class="form-control"
+                      formControlName="SL_TRAM" placeholder="Số lượng trạm">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['SL_TRAM'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-12 p-lg-12 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="DL_TBA">Dung lượng trạm biến áp (kVA)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="DL_TBA" type="text" maxlength="12" pInputText class="form-control"
+                      formControlName="DL_TBA" placeholder="Dung lượng trạm biến áp">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['DL_TBA'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-g-12 p-md-8 p-lg-8">
+            <div class="p-g p-fluid">
+              <div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="NG_NSNN">Ngân sách nhà nước (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="NG_NSNN" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="NG_NSNN" placeholder="Nguyên giá ngân sách nhà nước">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NG_NSNN'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="NG_VHPT">Vốn hỗ trợ phát triển (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="NG_VHPT" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="NG_VHPT" placeholder="Nguyên giá vốn hỗ trợ phát triển">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NG_VHPT'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="NG_VVUD">Vốn vay ưu đãi (dồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="NG_VVUD" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="NG_VVUD" placeholder="Nguyên giá vốn vay ưu đãi">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NG_VVUD'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="NG_QPT">Quỹ phát triển (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="NG_QPT" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="NG_QPT" placeholder="Nguyên giá quỹ phát triển">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NG_QPT'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="NG_VTD">Vốn tín dụng (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="NG_VTD" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="NG_VTD" placeholder="Nguyên giá vốn tín dụng">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['NG_VTD'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-12">
+                    <label for="GT_CLAI">&emsp;</label>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="QD_NTN">Dự toán quyết toán (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="QD_NTN" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="QD_NTN" placeholder="QĐ dự toán quyết toán theo ngày tháng năm">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['QD_NTN'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="QD_GT">Dự toán theo giá trị (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="QD_GT" type="text" maxlength="15" pInputText class="form-control" formControlName="QD_GT"
+                      placeholder="QĐ dự toán theo giá trị">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['QD_GT'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+                <div class="p-g-12 p-md-6 p-lg-6 p-g-nopad">
+                  <div class="p-g-5">
+                    <label for="GT_CLAI">Giá trị còn lại (đồng)</label>
+                  </div>
+                  <div class="p-g-7">
+                    <input id="GT_CLAI" type="text" maxlength="15" pInputText class="form-control"
+                      formControlName="GT_CLAI">
+                    <div class="p-g-12 p-message p-messages-error p-corner-all"
+                      *ngIf="tienTNhanForm.controls['GT_CLAI'].errors!= null">
+                      Nhập dữ liệu đúng định dạng số
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-fieldset>
+    </div>
+  </form>
+  <!----->
+  <div class="p-grid p-grid-responsive p-grid-pad">
+    <div class="p-g-12 p-md-12 p-lg-12">
+      <p-panel>
+        <p-header>
+          Danh sách chi tiết dự án
+        </p-header>
+        <div class="p-datatable p-widget">
+          <div class="p-g">
+            <div class="p-g-12 p-md-12 p-g-nopad">
+              <input #inputFile type="file" style="display: inline-block;" #fileUp (click)="clickChangeFile()"
+                (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+              <p class="help-block label label-danger" style="color: blue"> Chỉ hỗ trợ định dạng *.xlsx</p>
+            </div>
+          </div>
+          <div class="p-g">
+            <div class="p-g-12 p-md-4 p-lg-4 p-g-nopad">
+              <input #gb2 type="text" pInputText size="70" placeholder="Tìm kiếm nhanh">
+            </div>
+            <div class="p-g-12 p-md-1 p-lg-1 p-g-nopad"></div>
+            <div class="p-g-12 p-md-3 p-lg-3 p-g-nopad">
+              <div class="p-g-12" style="color: #283593;font-weight: bold;font-size: 13px">
+                Tổng số : {{lstDuAnCTiet.length}} bản ghi
+              </div>
+            </div>
+            <div class="p-g-12 p-md-1 p-lg-1 p-g-nopad"></div>
+            <div class="p-g-12 p-md-1 p-lg-3 p-g-nopad">
+              <button class="tool" pButton type="button" icon="p-icon-file-download" label="Xuất file dự án"
+                style="padding-bottom: 20px;" (click)="btnXuatFileDuAn()" style="font-size: 120%;"></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="scroll">
+          <p-table [globalFilterFields]="gb2" scrollHeight="335px" [rows]="20" scrollable="true"
+            resizableColumns="true" [(value)]="lstDuAnCTiet" [responsive]="true" [(selection)]="selectedDuAn"
+            (onHeaderCheckboxToggle)="checkListDuAn($event)" (onRowSelect)="checkListDuAn($event)"
+            (onRowUnselect)="checkListDuAn()" [rowsPerPageOptions]="[5,10,20,50]"
+            [paginator]="true" rowHover="true" scrollWidth="100%" [pageLinks]>
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+
+                <th pSortableColumn="STT">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                      STT
+                      <p-sortIcon field="STT"></p-sortIcon>
+                      <p-columnFilter type="text" field="STT" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+
+                <th pSortableColumn="MA_DVIQLY">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    MA_DVIQLY
+                      <p-sortIcon field="MA_DVIQLY"></p-sortIcon>
+                      <p-columnFilter type="text" field="MA_DVIQLY" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+
+                <th pSortableColumn="FILE_EXCEL">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    FILE_EXCEL
+                      <p-sortIcon field="FILE_EXCEL"></p-sortIcon>
+                      <p-columnFilter type="text" field="FILE_EXCEL" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="MA_DUAN">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    MA_DUAN
+                      <p-sortIcon field="MA_DUAN"></p-sortIcon>
+                      <p-columnFilter type="text" field="MA_DUAN" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="TEN_CTRINH">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    TEN_CTRINH
+                      <p-sortIcon field="TEN_CTRINH"></p-sortIcon>
+                      <p-columnFilter type="text" field="TEN_CTRINH" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="MA_LOAI_DUAN">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    MA_LOAI_DUAN
+                      <p-sortIcon field="MA_LOAI_DUAN"></p-sortIcon>
+                      <p-columnFilter type="text" field="MA_LOAI_DUAN" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="MA_DVIDCHINH">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    MA_DVIDCHINH
+                      <p-sortIcon field="MA_DVIDCHINH"></p-sortIcon>
+                      <p-columnFilter type="text" field="MA_DVIDCHINH" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="SO_HO">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    SO_HO
+                      <p-sortIcon field="SO_HO"></p-sortIcon>
+                      <p-columnFilter type="text" field="SO_HO" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="SO_HO">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    SO_HO
+                      <p-sortIcon field="SO_HO"></p-sortIcon>
+                      <p-columnFilter type="text" field="SO_HO" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="NAM_VH">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    NAM_VH
+                      <p-sortIcon field="NAM_VH"></p-sortIcon>
+                      <p-columnFilter type="text" field="NAM_VH" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="SL_TRAM">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    SL_TRAM
+                      <p-sortIcon field="SL_TRAM"></p-sortIcon>
+                      <p-columnFilter type="text" field="SL_TRAM" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="DL_TBA">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    DL_TBA
+                      <p-sortIcon field="DL_TBA"></p-sortIcon>
+                      <p-columnFilter type="text" field="DL_TBA" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="DL_TBA">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    DL_TBA
+                      <p-sortIcon field="DL_TBA"></p-sortIcon>
+                      <p-columnFilter type="text" field="DL_TBA" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="DZ_110">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    DZ_110
+                      <p-sortIcon field="DZ_110"></p-sortIcon>
+                      <p-columnFilter type="text" field="DZ_110" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="DZ_HTHE">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    DZ_HTHE
+                      <p-sortIcon field="DZ_HTHE"></p-sortIcon>
+                      <p-columnFilter type="text" field="DZ_HTHE" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="DZ_TTHE">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    DZ_TTHE
+                      <p-sortIcon field="DZ_TTHE"></p-sortIcon>
+                      <p-columnFilter type="text" field="DZ_TTHE" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="NG_QPT">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    NG_QPT
+                      <p-sortIcon field="NG_QPT"></p-sortIcon>
+                      <p-columnFilter type="text" field="NG_QPT" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="NG_VHPT">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    NG_VHPT
+                      <p-sortIcon field="NG_VHPT"></p-sortIcon>
+                      <p-columnFilter type="text" field="NG_VHPT" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="NG_VTD">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    NG_VTD
+                      <p-sortIcon field="NG_VTD"></p-sortIcon>
+                      <p-columnFilter type="text" field="NG_VTD" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="NG_VVUD">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    NG_VVUD
+                      <p-sortIcon field="NG_VVUD"></p-sortIcon>
+                      <p-columnFilter type="text" field="NG_VVUD" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="QD_GT">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    QD_GT
+                      <p-sortIcon field="QD_GT"></p-sortIcon>
+                      <p-columnFilter type="text" field="QD_GT" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="QD_NTN">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    QD_NTN
+                      <p-sortIcon field="QD_NTN"></p-sortIcon>
+                      <p-columnFilter type="text" field="QD_NTN" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="GT_CLAI">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    GT_CLAI
+                      <p-sortIcon field="GT_CLAI"></p-sortIcon>
+                      <p-columnFilter type="text" field="GT_CLAI" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-duAn let-index="rowIndex">
+              <tr class="p-selectable-row">
+                <td>
+                  <p-tableCheckbox [value]="selectedDuAn"></p-tableCheckbox>
+                </td>
+                <td>
+                  <span class="p-column-title">STT</span>
+                  {{index+1}}
+                </td>
+                <td>
+                  <span class="p-column-title">MA_DVIQLY</span>
+                  {{duAn.MA_DVIQLY}}
+                </td>
+                <td>
+                  <span class="p-column-title">FILE_EXCEL</span>
+                  {{duAn.FILE_EXCEL}}
+                </td>
+                <td>
+                  <span class="p-column-title">MA_DUAN</span>
+                  {{duAn.MA_DUAN}}
+                </td>
+                <td>
+                  <span class="p-column-title">TEN_CTRINH</span>
+                  {{duAn.TEN_CTRINH}}
+                </td>
+                <td>
+                  <span class="p-column-title">MA_LOAI_DUAN</span>
+                  {{duAn.MA_LOAI_DUAN}}
+                </td>
+                <td>
+                  <span class="p-column-title">MA_DVIDCHINH</span>
+                  {{duAn.MA_DVIDCHINH}}
+                </td>
+                <td>
+                  <span class="p-column-title">SO_HO</span>
+                  {{duAn.SO_HO}}
+                </td>
+                <td>
+                  <span class="p-column-title">NAM_VH</span>
+                  {{duAn.NAM_VH}}
+                </td>
+                <td>
+                  <span class="p-column-title">SL_TRAM</span>
+                  {{duAn.SL_TRAM}}
+                </td>
+                <td>
+                  <span class="p-column-title">DL_TBA</span>
+                  {{duAn.DL_TBA}}
+                </td>
+                <td>
+                  <span class="p-column-title">DZ_110</span>
+                  {{duAn.DZ_110}}
+                </td>
+                <td>
+                  <span class="p-column-title">DZ_HTHE</span>
+                  {{duAn.DZ_HTHE}}
+                </td>
+                <td>
+                  <span class="p-column-title">DZ_TTHE</span>
+                  {{duAn.DZ_TTHE}}
+                </td>
+                <td>
+                  <span class="p-column-title">NG_NSNN</span>
+                  {{duAn.NG_NSNN}}
+                </td>
+                <td>
+                  <span class="p-column-title">NG_QPT</span>
+                  {{duAn.NG_QPT}}
+                </td>
+                <td>
+                  <span class="p-column-title">NG_VHPT</span>
+                  {{duAn.NG_VHPT}}
+                </td>
+                <td>
+                  <span class="p-column-title">NG_VTD</span>
+                  {{duAn.NG_VTD}}
+                </td>
+                <td>
+                  <span class="p-column-title">NG_VVUD</span>
+                  {{duAn.NG_VVUD}}
+                </td>
+                <td>
+                  <span class="p-column-title">QD_GT</span>
+                  {{duAn.QD_GT}}
+                </td>
+                <td>
+                  <span class="p-column-title">QD_NTN</span>
+                  {{duAn.QD_NTN}}
+                </td>
+                <td>
+                  <span class="p-column-title">GT_CLAI</span>
+                  {{duAn.GT_CLAI}}
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+        </div>
+      </p-panel>
+    </div>
+  </div>
+  <!---->
+
+</div>
+
+
+<!-- <p>Form value: {{ tienTNhanForm.value | json }}</p> -->
+<!-- <p>Excle value: {{ lstDuAnCTiet | json }}</p> -->

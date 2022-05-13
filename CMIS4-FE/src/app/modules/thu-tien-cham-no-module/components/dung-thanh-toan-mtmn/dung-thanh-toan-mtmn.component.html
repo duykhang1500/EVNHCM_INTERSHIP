@@ -1,0 +1,288 @@
+<p-toast></p-toast>
+<cmis-loading [isLoading]="isLoading"></cmis-loading>
+
+<p-toolbar>
+    <div class="p-toolbar-group-left">
+        <p-button label="Thêm mới" icon="pi pi-plus" class="mr-2 mb-2" [disabled]="disabledThemMoi"
+            (click)="onClickThemMoi()"></p-button>
+        <p-button label="Khôi phục thanh toán" icon="pi pi-replay" class="mr-2 mb-2" [disabled]="disabledKPhucTToan"
+            (click)="onClickKPhucTToan()"></p-button>
+        <p-button label="Cập nhật" icon="pi pi-pencil" class="mr-2 mb-2" [disabled]="disabledUpdate"
+            (click)="onClickUpdate()"></p-button>
+    </div>
+
+    <div class="p-toolbar-group-right">
+        <p-button label="Tiếp tục" icon="pi pi-play" class="mr-2 mb-2" [disabled]="disabledTiepTuc"
+            (click)="onClickTiepTuc()"></p-button>
+    </div>
+</p-toolbar>
+
+<div class="scroll-full-height">
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <h4>Tìm kiếm khách hàng</h4>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-5">
+                        <label>Mã khách hàng</label>
+                        <input type="text" pInputText class="w-full"
+                            placeholder="Nhập mã K.Hàng và ấn enter để tìm kiếm" [disabled]="disabledTKiemNCao"
+                            [(ngModel)]="maKHangTKiem" (keydown)="onEnterTKiemMaKHang($event)" />
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label>Tên KH (CĐT)</label>
+                        <input type="text" [(ngModel)]="dungTToanMTMN.TEN_KHANG" pInputText class="w-full"
+                            [disabled]="true" />
+                    </div>
+                    <div class="field col-12 md:col-3">
+                        <label>Ngày ký HĐ</label>
+                        <p-calendar [showIcon]="true" styleClass="w-full" [(ngModel)]="dungTToanMTMN.NGAY_KY"
+                            dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050"
+                            [disabled]="true">
+                        </p-calendar>
+                    </div>
+                    <div class="field col-12 md:col-9">
+                        <label>Địa chỉ lắp đặt</label>
+                        <input type="text" [(ngModel)]="dungTToanMTMN.DIA_CHI" pInputText class="w-full"
+                            [disabled]="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>C.Suất nghiệm thu (kWp)</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="dungTToanMTMN.CONG_SUAT" inputId="locale-us"
+                            mode="decimal" locale="en-US" [minFractionDigits]="3" [disabled]="true">
+                        </p-inputNumber>
+                    </div>
+
+                    <div class="field col-12 md:col-9">
+                        <label>Phân loại</label>
+                        <input type="text" [(ngModel)]="dungTToanMTMN.PHAN_LOAI" pInputText class="w-full"
+                            [disabled]="true" />
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        &nbsp;
+                    </div>
+
+                    <div class="field col-12">
+                        <label>Điện năng và số tiền chưa thanh toán:</label>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>Điện năng (kWh)</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="dungTToanMTMN.SAN_LUONG" inputId="locale-us"
+                            mode="decimal" locale="en-US" [disabled]="true">
+                        </p-inputNumber>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>Tổng tiền</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="dungTToanMTMN.TONG_TIEN" inputId="locale-us"
+                            locale="en-US" [disabled]="true">
+                        </p-inputNumber>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>Số tiền</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="dungTToanMTMN.SO_TIEN" inputId="locale-us"
+                            locale="en-US" [disabled]="true">
+                        </p-inputNumber>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>Tiền GTGT</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="dungTToanMTMN.TIEN_GTGT" inputId="locale-us"
+                            locale="en-US" [disabled]="true">
+                        </p-inputNumber>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <h4>Thông tin dừng thanh toán</h4>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-4">
+                        <label>Tháng dừng</label>
+                        <p-calendar styleClass="w-full" [showIcon]="true" [locale]="vn_local" [(ngModel)]="ngayDungTT"
+                            dateFormat="mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050"
+                            [disabled]="disabledCapNhat">
+                        </p-calendar>
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label>C.suất khi k.tra (kWh)</label>
+                        <p-inputNumber styleClass="w-full" [(ngModel)]="csuatKTra" inputId="locale-us" locale="en-US"
+                            mode="decimal" [minFractionDigits]="3" [disabled]="disabledCapNhat">
+                        </p-inputNumber>
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label>BB kiểm tra (số/ngày)</label>
+                        <input type="text" pInputText class="w-full" [(ngModel)]="bbanKTra"
+                            [disabled]="disabledCapNhat" />
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>Lý do</label>
+                        <div class="field-radiobutton">
+                            <p-radioButton styleClass="w-full" name="city" value="0" [(ngModel)]="lyDoDungTT"
+                                [disabled]="disabledCapNhat" (onClick)="onChangeLyDo()"></p-radioButton>
+                            <label>Vi phạm hợp đồng</label>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-3">
+                        <label>&nbsp;</label>
+                        <div class="field-radiobutton">
+                            <p-radioButton styleClass="w-full" name="city" value="1" [(ngModel)]="lyDoDungTT"
+                                [disabled]="disabledCapNhat" (onClick)="onChangeLyDo()"></p-radioButton>
+                            <label>Không đủ h.sơ thanh toán</label>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-2">
+                        <label>&nbsp;</label>
+                        <div class="field-radiobutton">
+                            <p-radioButton styleClass="w-full" name="city" value="2" [(ngModel)]="lyDoDungTT"
+                                [disabled]="disabledCapNhat" (onClick)="onChangeLyDoKhac()"></p-radioButton>
+                            <label>Khác</label>
+                        </div>
+                    </div>
+
+                    <div class="field col-12 md:col-2">
+                        <label>&nbsp;</label>
+                        <input type="text" pInputText class="w-full" [(ngModel)]="lyDoDungKhac"
+                            [disabled]="disabledLyDoKhac" placeholder="(ghi rõ lý do khi chọn khác)" />
+                    </div>
+
+                    <div class="field col-12 md:col-2">
+                        <label>&nbsp;</label>
+                        <p-button label="Ghi" styleClass="w-full" icon="pi pi-save" class="mr-2 mb-2"
+                            [disabled]="disabledCapNhat" (click)="onClickCapNhat()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <p-table #dt styleClass="p-datatable-gridlines" [value]="lstDungTToanMTMN" dataKey="MA_KHANG"
+                    [(selection)]="dungTToanMTMNSelect" (onRowSelect)="onSelectRowKHang($event)"
+                    (onRowUnselect)="onUnSelectRowKHang($event)" [showCurrentPageReport]="true"
+                    (onHeaderCheckboxToggle)="checkListDuAn($event)" [paginator]="true" [rows]="5" rowHover="true"
+                    currentPageReportTemplate="Khách hàng số {first} đến {last} trong tổng {totalRecords} khách hàng"
+                    [globalFilterFields]="['TEN_KHANG','MA_KHANG']" scrollable="true" selectionMode="single">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between table-header">
+                            <h4> Danh sách đang dừng thanh toán </h4>
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText class="w-full" type="text"
+                                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Tìm kiếm thông tin" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" style="padding-left: 0px !important;">
+                        <tr>
+                            <th pSortableColumn="MA_KHANG">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Mã khách hàng
+                                    <p-sortIcon field="MA_KHANG"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="TEN_KHANG">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Tên khách hàng
+                                    <p-sortIcon field="TEN_KHANG"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">CS nghiệm thu</div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">CS kiếm tra</div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">Tháng dừng</div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">Lý do</div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">Điện năng</div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">Số tiền</div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row>
+                        <tr class="p-selectable-row" [pSelectableRow]="row" [pContextMenuRow]="row">
+                            <td>{{row.MA_KHANG}}</td>
+                            <td>{{row.TEN_KHANG}}</td>
+                            <td>{{row.CONG_SUAT}}</td>
+                            <td>{{row.CONG_SUATKT}}</td>
+                            <td>{{row.NGAY_DUNG}}</td>
+                            <td>{{row.LY_DO}}</td>
+                            <td>{{row.SAN_LUONG}}</td>
+                            <td>
+                                {{row.TONG_TIEN | currency:'VND':'symbol'}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Tìm kiếm khách hàng nâng cao" [(visible)]="showTKiemKHangNCao" [responsive]="true" [modal]="true"
+    [style]="{width: '70vw'}" [maximizable]="true" [position]="'top'">
+    <cmis-tim-kiem-khach-hang (onSelect)="onSelectKHang($event)"></cmis-tim-kiem-khach-hang>
+</p-dialog>
+
+<p-dialog header="Cập nhật thông tin khôi phục thanh toán" [(visible)]="showDialogKPhuc" [responsive]="true"
+    [modal]="true" [style]="{width: '40vw'}" [maximizable]="true">
+    <div class="p-grid">
+        <div class="col-12">
+            <div class="p-grid">
+                <div class="p-col-4">
+                    <span>Lý do</span>
+                </div>
+                <div class="p-col-4">
+                    <p-radioButton value="0" label="Chủ đầu tư đã hoàn thành thủ tục" [(ngModel)]="lyDoKPhuc">
+                    </p-radioButton>
+                </div>
+                <div class="p-col-4">
+                    <p-radioButton value="1" label="Do cập nhật nhầm" [(ngModel)]="lyDoKPhuc">
+                    </p-radioButton>
+                </div>
+            </div>
+            <div class="p-grid">
+                <div class="p-col-4">
+                    <span>Tháng khôi phục</span>
+                </div>
+                <div class="p-col-8">
+                    <p-calendar [showIcon]="true" [locale]="vn_local" [(ngModel)]="ngayKPhuc" dateFormat="mm/yy"
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050">
+                    </p-calendar>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12" style="text-align: center;">
+            <div class="p-grid">
+                <div class="p-col-4">&nbsp;</div>
+                <div class="p-col-2">
+                    <button pButton type="button" label="Đồng ý" (click)="onDongYKPhuc()" icon="pi pi-check"></button>
+                </div>
+                <div class="p-col-2">
+                    <button class="p-button-danger" pButton type="button" label="Hủy bỏ" (click)="onHuyBoKPhuc()"
+                        icon="pi pi-times"></button>
+                </div>
+                <div class="p-col-4">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+</p-dialog>

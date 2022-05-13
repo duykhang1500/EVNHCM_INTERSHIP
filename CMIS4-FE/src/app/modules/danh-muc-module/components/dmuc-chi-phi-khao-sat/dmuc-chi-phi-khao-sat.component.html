@@ -1,0 +1,176 @@
+<div class="grid table-demo">
+  <div class="col-12">
+    <div class="card">
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <p-button (click)="showModalAdd()" icon="pi pi-plus" label="Thêm" styleClass="p-button-success">
+          </p-button>
+        </ng-template>
+      </p-toolbar>
+      <p-table [value]="list" [paginator]="true" [rows]="8" styleClass="p-datatable-products">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Mã đơn vị</th>
+            <th>Mã Chi phí</th>
+            <th>Tên chi phí</th>
+            <th>Đơn vị tính</th>
+            <th>Chi phí</th>
+            <th>Hệ số</th>
+            <th>Người tạo</th>
+            <th>Người sửa</th>
+            <th>Ngày tạo</th>
+            <th>Ngày sửa</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{item.maDviqly}}</td>
+            <td>{{item.maCphiKsat}}</td>
+            <td>{{item.tenCphiKsat}}</td>
+            <td>{{item.dvt}}</td>
+            <td>{{item.cphiKsat}}</td>
+            <td>{{item.heSoKsat}}</td>
+            <td>{{item.nguoiTao}}</td>
+            <td>{{item.nguoiSua}}</td>
+            <td>{{ item.ngayTao | date:'dd/MM/yyyy'}}</td>
+            <td>{{item.ngaySua | date:'dd/MM/yyyy'}}</td>
+            <td>
+              <p-button [label]="(item.trangThai ==1 ? 'Kích hoạt': 'Đã hủy')"
+                [styleClass]="'p-button-' + (item.trangThai == 1 ? 'success': 'danger')">
+              </p-button>
+            </td>
+            <td>
+              <button pButton pRipple icon=" pi pi-pencil" class="p-button-rounded p-button-info mr-2" pTooltip="Sửa"
+                tooltipPosition="top" (click)="setSelected(item)">
+              </button>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" pTooltip="Xóa"
+                tooltipPosition="top" (click)="handleDelete(item.maCphiKsat, item.tenCphiKsat)">
+              </button>
+
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <!-- Form tạo chi phí -->
+  <p-dialog header="Tạo chi phí khảo sát mới" [(visible)]="displayModalAdd" [style]="{width: '30vw'}">
+    <div class="grid p-fluid mt-3">
+      <div class="col-6 mb-2">
+        <span class="p-float-label">
+          <input type="text" pInputText [(ngModel)]="maDonViQuanLy" autofocus maxlength="6">
+          <label for="float-input">Mã đơn vị</label>
+        </span>
+      </div>
+      <div class=" col-6 mb-2">
+        <span class="p-float-label">
+          <input type="text" pInputText [(ngModel)]="maChiPhiKhaoSat" maxlength="20">
+          <label for="float-input">Mã chi phí</label>
+        </span>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="p-float-label">
+          <input type="text" pInputText [(ngModel)]="tenChiPhiKhaoSat">
+          <label for="float-input">Tên chi phí</label>
+        </span>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="p-float-label">
+          <input type="text" pInputText [(ngModel)]="donViTinh" maxlength="10">
+          <label for="float-input">Đơn vị tính</label>
+        </span>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="p-float-label">
+          <p-inputNumber mode="decimal" [(ngModel)]="chiPhiKhaoSat"></p-inputNumber>
+          <label for="float-input">Chi phí</label>
+        </span>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="p-float-label">
+          <p-inputNumber mode="decimal" [(ngModel)]="heSoKhaoSat"></p-inputNumber>
+          <label for="float-input">Hệ số khảo sát</label>
+        </span>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="Hủy bỏ" (click)="closeModalDialog()" styleClass="p-button-text"></p-button>
+      <p-button label="Đồng ý" (click)="handleCreate()" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>
+
+
+
+<!-- FORM SỬA -->
+<p-dialog header="Sửa thông tin chi phí khảo sát" [(visible)]="displayModalEdit" [style]="{width: '30vw'}">
+  <div class="grid p-fluid mt-3">
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <input type="text" pInputText [(ngModel)]="selectedItem.maDviqly">
+        <label for="float-input">Mã đơn vị</label>
+        <label for="float-input">Mã đơn vị</label>
+        <small class="p-error block" *ngIf="submitted && selectedItem.maDviqly?.length>6 ">Mã đơn vị tối đa 6 ký
+          tự</small>
+      </span>
+    </div>
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <input type="text" pInputText [(ngModel)]="selectedItem.maCphiKsat" [disabled]="true">
+        <label for="float-input">Mã chi phí</label>
+      </span>
+    </div>
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <input type="text" pInputText [(ngModel)]="selectedItem.tenCphiKsat">
+        <label for="float-input">Tên chi phí</label>
+      </span>
+    </div>
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <input type="text" pInputText [(ngModel)]="selectedItem.dvt">
+        <label for="float-input">Đơn vị tính</label>
+        <small class="p-error block" *ngIf="submitted && selectedItem.dvt.length>10">Đơn vị tính tối đa 10 ký
+          tự</small>
+
+      </span>
+    </div>
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <p-inputNumber mode="decimal" [(ngModel)]="selectedItem.cphiKsat"></p-inputNumber>
+        <label for="float-input">Chi phí</label>
+      </span>
+    </div>
+    <div class="col-6 mb-2">
+      <span class="p-float-label">
+        <p-inputNumber mode="decimal" [(ngModel)]="selectedItem.heSoKsat"></p-inputNumber>
+        <label for="float-input">Hệ số khảo sát</label>
+      </span>
+    </div>
+
+    <div class="col-12 field">
+      <label class="mb-3 mt-3">Trạng thái</label>
+      <div class="grid">
+        <div class="field-radiobutton col-6">
+          <p-radioButton id="category2" name="trangThai" value="1" [(ngModel)]="selectedItem.trangThai">
+          </p-radioButton>
+          <label for="category2">Kích hoạt</label>
+        </div>
+        <div class="field-radiobutton col-6">
+          <p-radioButton id="category1" name="trangThai" value="0" [(ngModel)]="selectedItem.trangThai">
+          </p-radioButton>
+          <label for="category1">Hủy</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Hủy bỏ" (click)="showModalEdit()" styleClass="p-button-text"></p-button>
+    <p-button label="Đồng ý" (click)="handleUpdate()" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>
+<p-confirmDialog [style]="{width: '20vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>
+<p-toast life="3000"></p-toast>

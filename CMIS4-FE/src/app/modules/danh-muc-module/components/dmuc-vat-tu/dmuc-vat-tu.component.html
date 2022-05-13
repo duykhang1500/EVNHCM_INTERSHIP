@@ -1,0 +1,127 @@
+<div class="grid table-demo">
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <p-button (click)="openNew()" icon="pi pi-plus" label="Thêm" styleClass="mr-2 p-button-success">
+                    </p-button>
+                </ng-template>
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Nhập file"
+                        chooseLabel="Nhập file" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Xuất file" icon="pi pi-upload" class="p-button-help"></button>
+                </ng-template>
+            </p-toolbar>
+            <p-table [value]="materials.reverse()" [paginator]="true" [rows]="8" styleClass="p-datatable-products">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Mã đơn vị
+
+                        </th>
+                        <th>Mã vật tư
+
+                        </th>
+                        <th>Tên vật tư
+
+                        </th>
+                        <th>Đơn vị tính
+
+                        </th>
+                        <th>Số pha
+
+                        </th>
+                        <th>Trạng thái
+
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-vattu>
+                    <tr>
+                        <td>{{vattu.maDviqly}}</td>
+                        <td>{{vattu.maVt}}</td>
+                        <td>{{vattu.ten}}</td>
+                        <td>{{vattu.dvt}}</td>
+                        <td>{{vattu.soPha}}</td>
+                        <td>
+                            <p-button [label]="(vattu.trangThai ==1 ? 'Kích hoạt': 'Đã hủy')"
+                                [styleClass]="'p-button-' + (vattu.trangThai == 1 ? 'success': 'danger')">
+                            </p-button>
+                        </td>
+                        <td>
+                            <button pButton pRipple icon=" pi pi-pencil" class="p-button-rounded p-button-info mr-2"
+                                pTooltip="Sửa" tooltipPosition="top" (click)="editMaterial(vattu)">
+                            </button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                pTooltip="Xóa" tooltipPosition="top" (click)="deleteMaterial(vattu)">
+                            </button>
+
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <p-dialog [(header)]="dialogTitle" [(visible)]="materialDialog" [style]="{width: '30vw'}" (onHide)="hideDialog()">
+        <div class="grid p-fluid pt-2">
+            <div class="col-6 mb-2">
+                <span class="p-float-label">
+                    <input type="text" pInputText [(ngModel)]="material.maDviqly" maxlength="6">
+                    <label for="float-input">Mã đơn vị quản lý</label>
+                </span>
+            </div>
+            <div class="col-6 mb-2">
+                <span class="p-float-label">
+                    <input type="text" pInputText [(ngModel)]="material.maVt" [disabled]="disable" maxlength="25">
+                    <label for="float-input">Mã vật tư</label>
+                </span>
+            </div>
+            <div class="col-6 mb-2">
+                <span class="p-float-label">
+                    <input type="text" pInputText [(ngModel)]="material.ten" maxlength="300">
+                    <label for="float-input">Tên vật tư</label>
+                </span>
+            </div>
+            <div class="col-6 mb-2">
+                <span class="p-float-label">
+                    <input type="text" pInputText [(ngModel)]="material.dvt" maxlength="20">
+                    <label for="float-input">Đơn vị tính</label>
+                </span>
+            </div>
+            <div class="col-6 mb-2">
+                <span class="p-float-label">
+                    <input type="number" pInputText [(ngModel)]="material.soPha" maxlength="99999">
+                    <label for="float-input">Số pha</label>
+                </span>
+            </div>
+            <div class="col-12 field" *ngIf="isEdit">
+                <label class="mb-3 mt-3">Trạng thái</label>
+                <div class="grid">
+                    <div class="field-radiobutton col-6">
+                        <p-radioButton id="category2" name="trangThai" value="1" [(ngModel)]="material.trangThai">
+                        </p-radioButton>
+                        <label for="category2">Kích hoạt</label>
+                    </div>
+                    <div class="field-radiobutton col-6">
+                        <p-radioButton id="category1" name="trangThai" value="0" [(ngModel)]="material.trangThai">
+                        </p-radioButton>
+                        <label for="category1">Hủy</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button label="Đóng" (click)="hideDialog()" icon="pi pi-times"
+                styleClass="p-button-danger p-button-outlined"></p-button>
+            <p-button label="Lưu" (click)="saveMaterial()" icon="pi pi-check"
+                styleClass="p-button-success p-button-outlined ">
+            </p-button>
+        </ng-template>
+    </p-dialog>
+    <p-confirmDialog [style]="{width: '20vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+    </p-confirmDialog>
+    <p-toast life="3000"></p-toast>
+
+</div>

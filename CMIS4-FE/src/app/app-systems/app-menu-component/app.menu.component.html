@@ -1,0 +1,21 @@
+<div class="p-grid p-fluid" style="width: 250px;">
+    <div class="p-col-12">
+        <div>&nbsp;</div>
+        <div class="p-field">
+            <span class="p-float-label" style="margin: 0px 10px 10px 10px;">
+                <p-autoComplete class="p-autocomplete" [(ngModel)]="selectedMenu" [suggestions]="lstCombo" field="label"
+                    (completeMethod)="search($event)" (onSelect)="showSelect()" (onUnSelect)="showSelect()"
+                    [dropdown]="true" [dropdownIcon]="'pi pi-search'">
+                </p-autoComplete>
+                <label>Tìm kiếm menu</label>
+            </span>
+        </div>
+        <ul style="font-size: 12px">
+            <li app-menuitem #itemMenu *ngFor="let item of modelAll; let i = index;" [item]="item" [index]="i"  pTooltip="{{item.label}}"
+                [root]="false">
+                
+            </li>
+        </ul>
+
+    </div>
+</div>

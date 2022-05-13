@@ -1,0 +1,8 @@
+{
+    "/REST_API-RESTWebService-context-root/resources/*": {
+        "target": "http://localhost:7101/",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+}

@@ -1,0 +1,22 @@
+div.scroll-full-height {
+  width: 100%;
+  overflow: auto;
+  height: calc(100vh - 160px);
+  background: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+div.scroll-w600 {
+  width: 100%;
+  overflow: auto;
+  width: 600px;
+}
+div.scroll-ttkh {
+  width: 100%;
+  overflow: auto;
+  height: 300px;
+  border: 1px solid gray;
+}
+
+Errorte {
+  color: red;
+}
